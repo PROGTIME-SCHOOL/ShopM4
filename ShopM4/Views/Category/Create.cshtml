@@ -1,11 +1,25 @@
-﻿<h1>Add Category</h1>
+﻿@model Category
+
+<h1>Add Category</h1>
 
 <form method="post">
     <p>
-        <input class="form-control" />
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
     </p>
 
     <p>
-        <input class="form-control" />
+        <label asp-for="DisplayOrder"></label>
+        <input asp-for="DisplayOrder" class="form-control" />
+    </p>
+
+    <p>
+        <input type="submit" class="btn btn-success" value="Create" />
+        <a class="btn btn-primary" asp-controller="Category" asp-action="Index"> Back </a>
     </p>
 </form>
+
+
+
+
+

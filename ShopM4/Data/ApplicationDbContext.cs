@@ -13,6 +13,7 @@ namespace ShopM4.Data
         }
 
         public DbSet<Category> Category { get; set; }
+        public DbSet<MyModel> MyModel { get; set; }
     }
 }
 

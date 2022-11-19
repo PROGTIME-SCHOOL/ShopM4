@@ -1,10 +1,10 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace ShopM4.Models
 {
-    public class Category
+    public class MyModel
     {
         [Key]
         public int Id { get; set; }
@@ -13,8 +13,7 @@ namespace ShopM4.Models
         public string Name { get; set; }
 
         [Required]
-        [DisplayName("Display Order")]
-        public int DisplayOrder { get; set; }
+        public int Number { get; set; }
     }
 }
 

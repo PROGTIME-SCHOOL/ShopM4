@@ -25,10 +25,20 @@ namespace ShopM4.Controllers
             return View(categories);
         }
 
-        // GET
+        // GET - Create
         public IActionResult Create()
         {
             return View();
+        }
+
+        // POST - Create
+        [HttpPost]
+        public IActionResult Create(Category category)
+        {
+            db.Category.Add(category);   
+            db.SaveChanges();
+
+            return RedirectToAction("Index");  // переход на страницу категорий
         }
     }
 }

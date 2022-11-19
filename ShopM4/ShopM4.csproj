@@ -10,10 +10,12 @@
     <None Remove="Data\" />
     <None Remove="Microsoft.EntityFrameworkCore.SqlServer" />
     <None Remove="Views\Category\" />
+    <None Remove="Views\MyModel\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
     <Folder Include="Views\Category\" />
+    <Folder Include="Views\MyModel\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.10">
