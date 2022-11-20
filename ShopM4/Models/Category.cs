@@ -14,6 +14,7 @@ namespace ShopM4.Models
 
         [Required]
         [DisplayName("Display Order")]
+        [Range(1, int.MaxValue, ErrorMessage = "Значение должно быть больше 0")]
         public int DisplayOrder { get; set; }
     }
 }

@@ -33,12 +33,89 @@ namespace ShopM4.Controllers
 
         // POST - Create
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Create(Category category)
         {
-            db.Category.Add(category);   
+            if (ModelState.IsValid)  // проверка модели на валидность
+            {
+                db.Category.Add(category);
+                db.SaveChanges();
+                return RedirectToAction("Index");  // переход на страницу категорий
+            }
+
+            return View(category);
+        }
+
+        // GET - Edit
+        [HttpGet]
+        public IActionResult Edit(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+
+            var category = db.Category.Find(id);
+
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            return View(category); 
+        }
+
+
+        // POST - Edit
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(Category category)
+        {
+            if (ModelState.IsValid)  // проверка модели на валидность
+            {
+                db.Category.Update(category);  // !!!
+                db.SaveChanges();
+                return RedirectToAction("Index");  // переход на страницу категорий
+            }
+
+            return View(category);
+        }
+
+        // GET - Delete
+        [HttpGet]
+        public IActionResult Delete(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+
+            var category = db.Category.Find(id);
+
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            return View(category);
+        }
+
+        // POST - Delete
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeletePost(int? id)
+        {
+            var category = db.Category.Find(id);
+
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            db.Category.Remove(category);
             db.SaveChanges();
 
-            return RedirectToAction("Index");  // переход на страницу категорий
+            return RedirectToAction("Index");
         }
     }
 }
