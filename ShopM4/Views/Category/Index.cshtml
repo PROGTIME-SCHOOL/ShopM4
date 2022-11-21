@@ -8,7 +8,8 @@
 
 
 <p>
-    <a class="btn btn-primary" asp-controller="Category" asp-action="Create"> Create Category </a>
+    <a class="btn btn-primary" asp-controller="Category" asp-action="Create">
+        <i class="fa-solid fa-plus"></i> Create Category </a>
 </p>
 
 
@@ -32,12 +33,14 @@
                     <td width="20%">
                         <a class="btn btn-primary" asp-controller="Category" asp-action="Edit"
                            asp-route-Id="@item.Id">
-                        Edit
+                            <i class="fa-solid fa-pen-to-square"></i>
+                            <!-- Edit -->
                         </a>
 
                         <a class="btn btn-danger" asp-controller="Category" asp-action="Delete"
                            asp-route-Id="@item.Id">
-                        Delete
+                            <i class="fa-solid fa-trash"></i>
+                            <!-- Delete -->
                         </a>
                     </td>
                 </tr>

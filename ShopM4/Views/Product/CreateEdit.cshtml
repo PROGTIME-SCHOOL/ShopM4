@@ -1,0 +1,63 @@
+﻿@model Product
+
+@{
+    var title = "Create Product";
+}
+
+@if (Model.Id != 0)
+{
+    title = "Edit Product";
+}
+
+<h1>@title</h1>
+
+<form method="post">
+
+    <!-- Передача скрытых данных -->
+    <input asp-for="Id" hidden />
+
+    <p>
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </p>
+
+    <p>
+        <label asp-for="Price"></label>
+        <input asp-for="Price" class="form-control" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </p>
+
+    <p>
+        <label asp-for="Description"></label>
+        <input asp-for="Description" class="form-control" />
+    </p>
+
+    <p>
+        <label asp-for="Image"></label>
+        <input type="file" asp-for="Image" class="form-control" />
+    </p>
+
+    <p>
+        @if (Model.Id != 0)
+        {
+            <input type="submit" class="btn btn-success" value="Update" />
+        }
+        else
+        {
+            <input type="submit" class="btn btn-success" value="Create" />
+        }
+
+        <a class="btn btn-primary" asp-controller="Category" asp-action="Index"> Back </a>
+    </p>
+
+    <p>
+        <div asp-validation-summary="All"></div>
+    </p>
+</form>
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
