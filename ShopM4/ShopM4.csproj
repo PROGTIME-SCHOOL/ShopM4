@@ -12,12 +12,14 @@
     <None Remove="Views\Category\" />
     <None Remove="Views\MyModel\" />
     <None Remove="Views\Product\" />
+    <None Remove="Models\ViewModels\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
     <Folder Include="Views\Category\" />
     <Folder Include="Views\MyModel\" />
     <Folder Include="Views\Product\" />
+    <Folder Include="Models\ViewModels\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.10">
