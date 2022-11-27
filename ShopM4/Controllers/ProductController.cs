@@ -13,10 +13,12 @@ namespace ShopM4.Controllers
     public class ProductController : Controller
     {
         private ApplicationDbContext db;
+        private IWebHostEnvironment webHostEnvironment;
 
-        public ProductController(ApplicationDbContext db)
+        public ProductController(ApplicationDbContext db, IWebHostEnvironment webHostEnvironment)
         {
             this.db = db;
+            this.webHostEnvironment = webHostEnvironment;
         }
 
         // GET INDEX
@@ -25,11 +27,13 @@ namespace ShopM4.Controllers
             IEnumerable<Product> objList = db.Product;
 
             // получаем ссылки на сущности категорий
+            /*
             foreach (var item in objList)
             {
                 // сопоставление таблицы категорий и таблицы product
                 item.Category = db.Category.FirstOrDefault(x => x.Id == item.CategoryId);
             }
+            */
 
             return View(objList);
         }
@@ -78,6 +82,48 @@ namespace ShopM4.Controllers
                 }
                 return View(productViewModel);
             }
+        }
+
+
+        // POST - CreateEdit
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CreateEdit(ProductViewModel productViewModel)
+        {
+            var files = HttpContext.Request.Form.Files;
+
+            string wwwRoot = webHostEnvironment.WebRootPath;
+
+            if (productViewModel.Product.Id == 0)
+            {
+                // create
+                string upload = wwwRoot + PathManager.ImageProductPath;
+                string imageName = Guid.NewGuid().ToString();
+
+                string extension = Path.GetExtension(files[0].FileName);
+
+                string path = upload + imageName + extension;
+
+                // скопируем файл на сервер
+                using (var fileStream = new FileStream(path,FileMode.Create))
+                {
+                    files[0].CopyTo(fileStream);
+                }
+
+                productViewModel.Product.Image = imageName + extension;
+
+                db.Product.Add(productViewModel.Product);
+            }
+            else
+            {
+                // update
+            }
+
+            db.SaveChanges();
+
+            return RedirectToAction("Index");
+
+            //return View();
         }
     }
 }
