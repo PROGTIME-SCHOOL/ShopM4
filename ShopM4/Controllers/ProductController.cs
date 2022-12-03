@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using ShopM4.Data;
 using ShopM4.Models;
 using ShopM4.Models.ViewModels;
@@ -117,6 +119,38 @@ namespace ShopM4.Controllers
             else
             {
                 // update
+                // AsNoTracking() - IMPORTANT!!!
+                var product = db.Product.AsNoTracking().FirstOrDefault(u => u.Id == productViewModel.Product.Id); // LINQ
+
+                if (files.Count > 0)  // юзер загружает другой файл
+                {
+                    string upload = wwwRoot + PathManager.ImageProductPath;
+                    string imageName = Guid.NewGuid().ToString();
+                    string extension = Path.GetExtension(files[0].FileName);
+                    string path = upload + imageName + extension;
+
+                    // delete old file
+                    var oldFile = upload + product.Image;
+
+                    if (System.IO.File.Exists(oldFile))
+                    {
+                        System.IO.File.Delete(oldFile);
+                    }
+
+                    // скопируем файл на сервер
+                    using (var fileStream = new FileStream(path, FileMode.Create))
+                    {
+                        files[0].CopyTo(fileStream);
+                    }
+
+                    productViewModel.Product.Image = imageName + extension;
+                }
+                else   // фотка не поменялась
+                {
+                    productViewModel.Product.Image = product.Image;  // оставляем имя прежним
+                }
+
+                db.Product.Update(productViewModel.Product);  
             }
 
             db.SaveChanges();
@@ -125,6 +159,37 @@ namespace ShopM4.Controllers
 
             //return View();
         }
+
+
+        // GET - DELETE
+        public IActionResult Delete(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+
+            Product product = db.Product.Find(id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            product.Category = db.Category.Find(product.CategoryId);
+
+            return View(product);
+        }
+
+        // POST
+        [HttpPost]
+        public IActionResult DeletePost(int? id)
+        {
+            // дз
+
+            return View();
+        }
+
     }
 }
 
