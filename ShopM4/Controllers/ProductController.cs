@@ -65,6 +65,12 @@ namespace ShopM4.Controllers
                 {
                     Text = x.Name,
                     Value = x.Id.ToString()
+                }),
+                MyModelList = db.MyModel.Select(x =>
+                new SelectListItem
+                {
+                    Text = x.Name,
+                    Value = x.Id.ToString()
                 })
             };
 
@@ -185,9 +191,29 @@ namespace ShopM4.Controllers
         [HttpPost]
         public IActionResult DeletePost(int? id)
         {
-            // дз
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-            return View();
+            // delete from db
+            Product product = db.Product.Find(id);
+            db.Product.Remove(product);
+            db.SaveChanges();
+
+            // delete image from server
+            string upload = webHostEnvironment.WebRootPath + PathManager.ImageProductPath;
+
+            // получаем ссылку на нашу старую фотку
+            var oldFile = upload + product.Image;
+
+            if (System.IO.File.Exists(oldFile))
+            {
+                System.IO.File.Delete(oldFile);
+            }
+
+
+            return RedirectToAction("Index");
         }
 
     }
