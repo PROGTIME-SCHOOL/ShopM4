@@ -30,6 +30,19 @@ public class HomeController : Controller
         return View(homeViewModel);
     }
 
+    public IActionResult Details(int id)
+    {
+        DetailsViewModel detailsViewModel = new DetailsViewModel()
+        {
+            IsInCart = false,
+            //Product = db.Product.Find(id)
+            Product = db.Product.Include(x => x.Category).
+                                 Where(x => x.Id == id).FirstOrDefault()
+        };
+
+        return View(detailsViewModel);
+    }
+
     public IActionResult Privacy()
     {
         return View();
