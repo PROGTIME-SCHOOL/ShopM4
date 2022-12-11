@@ -43,6 +43,14 @@ public class HomeController : Controller
         return View(detailsViewModel);
     }
 
+    [HttpPost]
+    public IActionResult DetailsPost(int id)
+    {
+        // НУЖНО ПОФИКСИТЬ ПРИХОД ID ПРИ НАЖАТИИ ДОБАВИТЬ В КОРЗИНУ
+
+        return View();
+    }
+
     public IActionResult Privacy()
     {
         return View();
