@@ -1,7 +1,7 @@
 ﻿@model ShopM4.Models.ViewModels.DetailsViewModel
 
 
-<form method="post" asp-action="DetailsPost">
+<form method="post" asp-action="DetailsPost" asp-controller="Home">
 
     <p>
         <input asp-for="Product.Id" hidden />
@@ -28,8 +28,19 @@
         <p>
             <a class="btn btn-primary" asp-action="Index"> Back </a>
 
-            <button type="submit" class="btn btn-primary">
-                Add to cart
-            </button>
+            @if (Model.IsInCart)
+            {
+                <a asp-action="RemoveFromCart" asp-route-Id="@Model.Product.Id" class="btn btn-warning">
+                    Remove from Cart
+                </a>
+            }
+            else
+            {
+                <button type="submit" asp-route-Id="@Model.Product.Id" class="btn btn-primary"
+                        asp-action="DetailsPost">
+                    Add to cart
+                </button>
+            }
+
         </p>
 </form>
