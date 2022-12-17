@@ -14,6 +14,8 @@
     <None Remove="Views\Product\" />
     <None Remove="Models\ViewModels\" />
     <None Remove="Utility\" />
+    <None Remove="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
+    <None Remove="Microsoft.AspNetCore.Identity.UI" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
@@ -31,6 +33,8 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.1" />
   </ItemGroup>
   <ItemGroup>
     <Content Remove="wwwroot\images\" />
