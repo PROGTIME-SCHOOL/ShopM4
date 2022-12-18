@@ -1,4 +1,4 @@
-﻿using ShopM4.Data;
+using ShopM4.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 
@@ -47,6 +47,8 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapRazorPages();   // для определения маршрута к странице Razor
 
 /*app.Use((context, next) =>
 {
