@@ -20,7 +20,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(
 );
 
 // для автоматического создания таблиц в бд
-builder.Services.AddDefaultIdentity<IdentityUser>().
+//builder.Services.AddDefaultIdentity<IdentityUser>().
+//    AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.AddIdentity<IdentityUser, IdentityRole>().
+    AddDefaultUI().AddDefaultTokenProviders().
     AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddControllersWithViews();  // MVC
