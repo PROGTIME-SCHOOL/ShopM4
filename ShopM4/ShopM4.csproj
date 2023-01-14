@@ -16,6 +16,7 @@
     <None Remove="Utility\" />
     <None Remove="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
     <None Remove="Microsoft.AspNetCore.Identity.UI" />
+    <None Remove="Views\Cart\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
@@ -26,6 +27,7 @@
     <Folder Include="wwwroot\images\" />
     <Folder Include="wwwroot\images\product\" />
     <Folder Include="Utility\" />
+    <Folder Include="Views\Cart\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.10">

@@ -48,6 +48,13 @@
                                 <li>
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Index">Product</a>
                                 </li>
+
+                                <div class="dropdown-divider"></div>
+
+                                <li>
+                                    <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register Admin User</a>
+                                </li>
+
                             </ul>
                         </li>
 
@@ -57,13 +64,13 @@
                                 var count = HttpContextAccessor.HttpContext.Session.
                                     Get<List<Cart>>(PathManager.SessionCart).Count();
 
-                                <a href="#" class="nav-link">
+                                <a asp-controller="Cart" class="nav-link">
                                     <i class="fas fa-shopping-cart"></i> &nbsp; (@count)
                                 </a>
                             }
                             else
                             {
-                                <a href="#" class="nav-link">
+                                <a asp-controller="Cart" class="nav-link">
                                     <i class="fas fa-shopping-cart"></i> &nbsp; (0)
                                 </a>
                             }
