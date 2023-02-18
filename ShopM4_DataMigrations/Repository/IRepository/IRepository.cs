@@ -10,14 +10,19 @@ namespace ShopM4_DataMigrations.Repository.IRepository
         IEnumerable<T> GetAll(
             Expression<Func<T, bool>> filter = null,
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
-            string includeProperties = null
+            string includeProperties = null,
+            bool isTracking = true
+        );
+
+        T FirstOrDefault(
+            Expression<Func<T, bool>> filter = null,
+            string includeProperties = null,
+            bool isTracking = true
         );
 
         void Add(T item);
 
         void Remove(T item);
-
-        void Update(T item);   // change!!!
 
         void Save();
     }
