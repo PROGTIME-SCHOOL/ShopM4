@@ -25,6 +25,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ShopM4_Models\ShopM4_Models.csproj" />
+    <ProjectReference Include="..\ShopM4_Utility\ShopM4_Utility.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.1" />
