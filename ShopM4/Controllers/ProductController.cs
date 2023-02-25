@@ -193,7 +193,7 @@ namespace ShopM4.Controllers
                 return NotFound();
             }
 
-            //product.Category = db.Category.Find(product.CategoryId);
+            // product.Category = db.Category.Find(product.CategoryId);
             // product.Category = db.Category.Find(product.CategoryId);
 
             return View(product);
@@ -203,20 +203,12 @@ namespace ShopM4.Controllers
         [HttpPost]
         public IActionResult DeletePost(int? id)
         {
-            if (id == null)
+            Product product = repositoryProduct.Find(id.GetValueOrDefault());
+
+            if (product == null)
             {
                 return NotFound();
             }
-
-            // delete from db
-            //Product product = db.Product.Find(id);
-            Product product = repositoryProduct.Find(id.GetValueOrDefault());
-
-            //db.Product.Remove(product);
-            //db.SaveChanges();
-
-            repositoryProduct.Remove(product);
-            repositoryProduct.Save();
 
             // delete image from server
             string upload = webHostEnvironment.WebRootPath + PathManager.ImageProductPath;
@@ -229,6 +221,8 @@ namespace ShopM4.Controllers
                 System.IO.File.Delete(oldFile);
             }
 
+            repositoryProduct.Remove(product);
+            repositoryProduct.Save();
 
             return RedirectToAction("Index");
         }
