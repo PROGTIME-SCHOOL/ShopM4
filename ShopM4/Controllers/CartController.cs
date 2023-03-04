@@ -98,6 +98,10 @@ namespace ShopM4.Controllers
         [HttpPost]
         public async Task<IActionResult> SummaryPost(ProductUserViewModel productUserViewModel)
         {
+            // work with user
+            var identityClaims = (ClaimsIdentity)User.Identity;
+            var claim = identityClaims.FindFirst(ClaimTypes.NameIdentifier);
+
            
             // код для отправки сообщения
             // combine
@@ -131,18 +135,13 @@ namespace ShopM4.Controllers
             // добавление данных в БД по заказу
             QueryHeader queryHeader = new QueryHeader()
             {
-                ApplicationUserId = productUserViewModel.ApplicationUser.Id,
+                ApplicationUserId = claim.Value,
                 QueryDate = DateTime.Now,
                 FullName = productUserViewModel.ApplicationUser.FullName,
                 PhoneNumber = productUserViewModel.ApplicationUser.PhoneNumber,
                 Email = productUserViewModel.ApplicationUser.Email,
-                ApplicationUser = productUserViewModel.ApplicationUser
+                ApplicationUser = repositoryApplicationUser.FirstOrDefault(x => x.Id == claim.Value)
             };
-
-            // получение юзера
-            //var claimsIdentiry = (ClaimsIdentity)User.Identity;
-            //var claim = claimsIdentiry.FindFirst(ClaimTypes.NameIdentifier);
-            // claim.Value -> getId
 
             repositoryQueryHeader.Add(queryHeader);
             repositoryQueryHeader.Save();
