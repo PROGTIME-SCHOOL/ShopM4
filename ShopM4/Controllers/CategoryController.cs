@@ -49,10 +49,12 @@ namespace ShopM4.Controllers
                 repositoryCategory.Add(category);
                 repositoryCategory.Save();
 
-                TempData["Success"] = "OK!";
+                TempData[PathManager.Success] = "Ok!!!";
 
                 return RedirectToAction("Index");  // переход на страницу категорий
             }
+
+            TempData[PathManager.Error] = "Error!";
 
             return View(category);
         }
@@ -134,6 +136,8 @@ namespace ShopM4.Controllers
 
             repositoryCategory.Remove(category);
             repositoryCategory.Save();
+
+            TempData[PathManager.Success] = "Deleted!";
 
             return RedirectToAction("Index");
         }
