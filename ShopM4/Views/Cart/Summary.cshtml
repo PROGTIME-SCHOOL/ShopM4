@@ -24,6 +24,10 @@
 
     <!-- Products -->
 
+    @{
+        double totalPriceProducts = 0;
+    }
+
     @for (int i = 0; i < Model.ProductList.Count(); i++)
     {
         <input type="hidden" asp-for="@Model.ProductList[i].Id" />
@@ -32,9 +36,31 @@
             Product Name: @Model.ProductList[i].Name
         </p>
 
-        <p>
-            Price: @Model.ProductList[i].Price
-        </p>
+        @if (User.IsInRole(ShopM4_Utility.PathManager.AdminRole))
+        {
+            <p>
+                Count: @Model.ProductList[i].TempCount
+            </p>
+
+            <p>
+                Total Price: @(Model.ProductList[i].TempCount * Model.ProductList[i].Price)
+            </p>
+
+            totalPriceProducts += Model.ProductList[i].TempCount * Model.ProductList[i].Price;
+        }
+        else
+        {
+            <p>
+                Price per thing: @Model.ProductList[i].Price
+            </p>
+        }
+    }
+
+    @if (User.IsInRole(ShopM4_Utility.PathManager.AdminRole))
+    {
+        <h3>
+            Total Price Products: @totalPriceProducts
+        </h3>
     }
 
 
