@@ -7,6 +7,7 @@ namespace ShopM4_Models
 {
     public class ApplicationUser : IdentityUser
     {
+        [Required]
         public string FullName { get; set; }
 
         [NotMapped]
