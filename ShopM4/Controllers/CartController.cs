@@ -32,10 +32,14 @@ namespace ShopM4.Controllers
         IRepositoryQueryHeader repositoryQueryHeader;
         IRepositoryQueryDetail repositoryQueryDetail;
 
+        IRepositoryOrderHeader repositoryOrderHeader;
+        IRepositoryOrderDetail repositoryOrderDetail;
+
         public CartController(IWebHostEnvironment webHostEnvironment,
             IEmailSender emailSender, IRepositoryProduct repositoryProduct,
             IRepositoryApplicationUser repositoryApplicationUser,
-            IRepositoryQueryHeader repositoryQueryHeader, IRepositoryQueryDetail repositoryQueryDetail)
+            IRepositoryQueryHeader repositoryQueryHeader, IRepositoryQueryDetail repositoryQueryDetail,
+            IRepositoryOrderHeader repositoryOrderHeader, IRepositoryOrderDetail repositoryOrderDetail)
         {
             this.webHostEnvironment = webHostEnvironment;
             this.emailSender = emailSender;
@@ -43,6 +47,9 @@ namespace ShopM4.Controllers
             this.repositoryProduct = repositoryProduct;
             this.repositoryQueryHeader = repositoryQueryHeader;
             this.repositoryQueryDetail = repositoryQueryDetail;
+
+            this.repositoryOrderHeader = repositoryOrderHeader;
+            this.repositoryOrderDetail = repositoryOrderDetail;
         }
 
 
@@ -116,11 +123,13 @@ namespace ShopM4.Controllers
             return RedirectToAction("Index");
         }
 
-        public IActionResult InquiryConfirmation()
+        public IActionResult InquiryConfirmation(int id = 0)
         {
+            OrderHeader orderHeader = repositoryOrderHeader.FirstOrDefault(x => x.Id == id);
+
             HttpContext.Session.Clear();   // очистить полностью сессию
 
-            return View();
+            return View(orderHeader);
         }
 
         [HttpPost]
@@ -134,13 +143,20 @@ namespace ShopM4.Controllers
             if (User.IsInRole(PathManager.AdminRole))
             {
                 // Work with ORDER
+                double totalPrice = 0;
+
+                foreach (var item in productUserViewModel.ProductList)
+                {
+                    totalPrice += item.TempCount * item.Price;
+                }
+
 
                 OrderHeader orderHeader = new OrderHeader()
                 {
                     AdminId = claim.Value,
                     DateOrder = DateTime.Now,
-                    TotalPrice = 0,                 // !!!
-                    Status = "",
+                    TotalPrice = totalPrice,
+                    Status = PathManager.StatusPending,
                     FullName = productUserViewModel.ApplicationUser.FullName,
                     Email = productUserViewModel.ApplicationUser.Email,
                     Phone = productUserViewModel.ApplicationUser.PhoneNumber,
@@ -150,6 +166,28 @@ namespace ShopM4.Controllers
                     Apartment = productUserViewModel.ApplicationUser.Apartment,
                     PostalCode = productUserViewModel.ApplicationUser.PostalCode
                 };
+
+
+                repositoryOrderHeader.Add(orderHeader);
+                repositoryOrderHeader.Save();
+
+
+                foreach (var product in productUserViewModel.ProductList)
+                {
+                    OrderDetail orderDetail = new OrderDetail()
+                    {
+                        OrderHeaderId = orderHeader.Id,
+                        ProductId = product.Id,
+                        Count = product.TempCount,
+                        PricePerUnit = (int)product.Price    // !!! fix need 
+                    };
+
+                    repositoryOrderDetail.Add(orderDetail);
+                }
+
+                repositoryOrderDetail.Save();
+
+                return RedirectToAction("InquiryConfirmation", new { orderHeader.Id });
             }
             else
             {
