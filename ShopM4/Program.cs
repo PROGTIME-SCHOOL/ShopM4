@@ -35,7 +35,9 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>().
 
 builder.Services.AddTransient<IEmailSender, EmailSender>();   // EMAIL SENDER
 
+
 builder.Services.Configure<SettingsBrainTree>(builder.Configuration.GetSection("BrainTree"));
+builder.Services.AddSingleton<IBrainTreeBridge, BrainTreeBridge>();
 
 builder.Services.AddScoped<IRepositoryCategory, RepositoryCategory>();
 builder.Services.AddScoped<IRepositoryMyModel, RepositoryMyModel>();

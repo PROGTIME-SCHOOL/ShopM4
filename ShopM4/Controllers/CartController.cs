@@ -11,8 +11,10 @@ using ShopM4_DataMigrations.Data;
 using ShopM4_Models;
 using ShopM4_Models.ViewModels;
 using ShopM4_Utility;
+using ShopM4_Utility.BrainTree;
 using ShopM4_DataMigrations.Repository.IRepository;
 using System.Net.NetworkInformation;
+using Braintree;
 
 namespace ShopM4.Controllers
 {
@@ -35,11 +37,14 @@ namespace ShopM4.Controllers
         IRepositoryOrderHeader repositoryOrderHeader;
         IRepositoryOrderDetail repositoryOrderDetail;
 
+        IBrainTreeBridge brainTreeBridge;
+
         public CartController(IWebHostEnvironment webHostEnvironment,
             IEmailSender emailSender, IRepositoryProduct repositoryProduct,
             IRepositoryApplicationUser repositoryApplicationUser,
             IRepositoryQueryHeader repositoryQueryHeader, IRepositoryQueryDetail repositoryQueryDetail,
-            IRepositoryOrderHeader repositoryOrderHeader, IRepositoryOrderDetail repositoryOrderDetail)
+            IRepositoryOrderHeader repositoryOrderHeader, IRepositoryOrderDetail repositoryOrderDetail,
+            IBrainTreeBridge brainTreeBridge)
         {
             this.webHostEnvironment = webHostEnvironment;
             this.emailSender = emailSender;
@@ -50,6 +55,8 @@ namespace ShopM4.Controllers
 
             this.repositoryOrderHeader = repositoryOrderHeader;
             this.repositoryOrderDetail = repositoryOrderDetail;
+
+            this.brainTreeBridge = brainTreeBridge;
         }
 
 
@@ -133,7 +140,8 @@ namespace ShopM4.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SummaryPost(ProductUserViewModel productUserViewModel)
+        public async Task<IActionResult> SummaryPost(IFormCollection collection,
+            ProductUserViewModel productUserViewModel)
         {
             // work with user
             var identityClaims = (ClaimsIdentity)User.Identity;
@@ -186,6 +194,26 @@ namespace ShopM4.Controllers
                 }
 
                 repositoryOrderDetail.Save();
+
+
+
+                string nonce = collection["payment_method_nonce"];
+
+                var request = new TransactionRequest
+                {
+                    Amount = 1,
+                    PaymentMethodNonce = nonce,
+                    OrderId = "1",
+                    Options = new TransactionOptionsRequest { SubmitForSettlement = true }  // автоматическое подтверждение
+                };
+
+                var getWay = brainTreeBridge.GetGateWay();
+
+                var resultTransaction = getWay.Transaction.Sale(request);
+
+                var id = resultTransaction.Target.Id;
+                var status = resultTransaction.Target.ProcessorResponseText;
+
 
                 return RedirectToAction("InquiryConfirmation", new { orderHeader.Id });
             }
@@ -284,6 +312,12 @@ namespace ShopM4.Controllers
                 {
                     applicationUser = new ApplicationUser();
                 }
+
+
+                // РАБОТА С ОПЛАТОЙ
+                var getWay = brainTreeBridge.GetGateWay();
+                var tokenClient = getWay.ClientToken.Generate();
+                ViewBag.TokenClient = tokenClient;
             }
             else    // работа юзера с корзиной
             {
