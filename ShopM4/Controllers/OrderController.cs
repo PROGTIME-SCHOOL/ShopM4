@@ -87,6 +87,32 @@ namespace ShopM4.Controllers
             return View(OrderViewModel);
 		}
 
+
+		[HttpPost]
+		public IActionResult StartInProcessing()
+		{
+			// получаем объект из бд
+			OrderHeader orderHeader = repositoryOrderHeader.
+				FirstOrDefault(x => x.Id == OrderViewModel.OrderHeader.Id);
+
+			orderHeader.Status = PathManager.StatusInProcess;
+
+			repositoryOrderHeader.Save();
+
+			return RedirectToAction("Index");
+		}
+
+        [HttpPost]
+        public IActionResult StartOrderDone()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult StartOrderCancel()
+        {
+            return View();
+        }
     }
 }
 
