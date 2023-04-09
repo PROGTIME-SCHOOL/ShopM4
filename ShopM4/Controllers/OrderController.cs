@@ -105,13 +105,42 @@ namespace ShopM4.Controllers
         [HttpPost]
         public IActionResult StartOrderDone()
         {
-            return View();
+			OrderHeader orderHeader = repositoryOrderHeader.
+				FirstOrDefault(x => x.Id == OrderViewModel.OrderHeader.Id);
+
+			orderHeader.Status = PathManager.StatusOrderDone;
+            repositoryOrderHeader.Save();
+
+            return RedirectToAction("Index");
         }
 
         [HttpPost]
         public IActionResult StartOrderCancel()
         {
-            return View();
+            OrderHeader orderHeader = repositoryOrderHeader.
+                FirstOrDefault(x => x.Id == OrderViewModel.OrderHeader.Id);
+
+			
+			var gateWay = brainTreeBridge.GetGateWay();
+
+			// get transaction
+			Transaction transaction = gateWay.Transaction.Find(orderHeader.TransactionId);
+
+			// условия при которых не возвращаем
+			if (transaction.Status == TransactionStatus.AUTHORIZED ||
+				transaction.Status == TransactionStatus.SUBMITTED_FOR_SETTLEMENT)
+			{
+				var res = gateWay.Transaction.Void(orderHeader.TransactionId);
+			}
+            else // возврат средств
+            {
+				var res = gateWay.Transaction.Refund(orderHeader.TransactionId);
+			}
+
+			orderHeader.Status = PathManager.StatusDenied;
+            repositoryOrderHeader.Save();
+
+            return RedirectToAction("Index");
         }
     }
 }
