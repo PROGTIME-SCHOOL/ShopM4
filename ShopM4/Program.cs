@@ -25,6 +25,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+//builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+//    .AddEntityFrameworkStores<ApplicationDbContext>();
+
 // для автоматического создания таблиц в бд
 //builder.Services.AddDefaultIdentity<IdentityUser>().
 //    AddEntityFrameworkStores<ApplicationDbContext>();
@@ -38,6 +44,13 @@ builder.Services.AddAuthentication().AddGoogle(googleOptions =>
     googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
     googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
 });
+
+builder.Services.AddAuthentication().AddFacebook(options =>
+{
+    options.AppId = "997823224925479";
+    options.AppSecret = "ae215d93bb9533b141fc5c186e6f52df";
+});
+
 
 builder.Services.AddTransient<IEmailSender, EmailSender>();   // EMAIL SENDER
 
